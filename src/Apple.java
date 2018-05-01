@@ -8,11 +8,14 @@ import java.awt.Image;
 
 public class Apple {
 
-	String base = "../assets/";
-	String Apple= base +"Apple0.png";
-	String GoldApple= base +"Apple0.png";
-	String RottenApple= base +"Apple0.png";
-	String BonusApple= base +"Apple0.png";
+	String base 		= "../assets/";
+	String Apple		= base +"red_apple.png";
+	String GreenApple	= base +"green_apple.png";
+	String GoldApple	= base +"gold_apple.png";
+	String RottenApple	= base +"rotten_apple.png";
+	String BonusApple	= base +"speed_apple.png";
+	String HeartApple 	= base + "heart_apple.png";
+	String TimeApple 	= base + "time_apple.png";
 	
 	Image image;
 	
@@ -79,11 +82,6 @@ public class Apple {
 		this.AppleRect.x = Random*5 +20;
 		
 		this.AppleRect.y = TestR*4 -200;
-		
-		
-		
-		
-		
 		
 		
 	}
