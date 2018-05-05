@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Random;
 
 public class Game extends Applet implements KeyListener, Runnable, MouseListener, MouseMotionListener
 {
@@ -183,11 +184,12 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	}
 	
 	public void DrawApplesOnTree(Graphics g) {
-		g.drawImage(apple,100,100,40,40,this);
+		g.drawImage(apple,70,100,40,40,this);
+		g.drawImage(apple,180,70,40,40,this);
 		g.drawImage(apple,300,190,40,40,this);
 		g.drawImage(apple,200,150,40,40,this);
 		g.drawImage(apple,400,120,40,40,this);
-		g.drawImage(apple,125,250,40,40,this);
+		g.drawImage(apple,100,220,40,40,this);
 		g.drawImage(apple,300,80,40,40,this);
 		g.drawImage(apple,470,200,40,40,this);
 		g.drawImage(apple,425,50,40,40,this);
@@ -200,6 +202,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	}
 
 	public void mouseClicked(MouseEvent e) {
+	
 	}
 	
 	public void mouseEntered(MouseEvent e) {	
