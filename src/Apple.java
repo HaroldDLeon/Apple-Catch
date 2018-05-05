@@ -3,6 +3,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Random;
+import java.awt.Image;
 
 
 public class Apple extends Rect {
@@ -16,68 +17,86 @@ public class Apple extends Rect {
 	String HeartApple 	= base + "heart_apple.png";
 	String TimeApple 	= base + "time_apple.png";
 	
+	
 	Image image;
 	
 	Random rand	= new Random();
 	
 	Random Test = new Random();
 	
+	Random Super = new Random();
+	
 	int Random = rand.nextInt(100);
 	int TestR = Test.nextInt(100);
+	int SuperRandom = Super.nextInt(100);
 	
-	Sprite AppleSprite;
+	
+	//Sprite AppleSprite;  (Unused)
 	
 	int points = 20;
 	
-	boolean isRotten = false;
+	boolean isRotten = false;	
 	boolean isGolden =false;
 	boolean isLife =false;
 	
 	public Apple()
 	{
-		super(-100,-100,40,45);
-		this.x = -100;
-		this.y = 0;
-		this.w = 0;
-		this.h = 0;
+		super(-100,0,0,0);
+	
 	}
+	
+	
 	public Apple(int Index)
 	{
-		super(-100,-100,40,45);
-		if(Random > 89)		{
+		super(-100,-100,40,40);
+		
+		if(SuperRandom > 89)
+		{
 			this.isGolden=true;
-			this.points = 100; // Golden Apple
-			image = Toolkit.getDefaultToolkit().getImage(GoldApple);
-		}
-		
-		else if(Random> 79 && Random<90) {
-			this.isRotten = true;
-			this.points = -100; // Rotten apple
-			image = Toolkit.getDefaultToolkit().getImage(RottenApple);
-		}
-		
-		else if(Random>69 && Random<80 ){
-			this.points = 40; // Normal Apple
-			image = Toolkit.getDefaultToolkit().getImage(Apple);
-		}
-		else{
-			this.points =40;
-			image = Toolkit.getDefaultToolkit().getImage(Apple);
+			this.points = 100;
 			
-			//setsprite for normal apple
+			image=Toolkit.getDefaultToolkit().getImage(GoldApple);
+		}
+		else if(SuperRandom> 79 && SuperRandom<90)
+		{
+			this.isRotten = true;
+			this.points = -100;
+			
+			image=Toolkit.getDefaultToolkit().getImage(RottenApple);
+		}
+		else if(SuperRandom>49 && SuperRandom<80 )
+		{
+			this.points = -100;
+			
+			image=Toolkit.getDefaultToolkit().getImage(Apple);
+		}
+		else
+		{
+			this.points =60;
+			
+			image=Toolkit.getDefaultToolkit().getImage(GreenApple);
+			
+			
 		}
 		
-		Random = (Random+Index+7)*7%100;
-		
+		//these define where apples can spawn
 		this.x = Random*5 +20;
-		this.y = TestR*4 -200;
+		
+		this.y = TestR ;
+				
+		
 		
 	}
 	
-	public void draw(Graphics g)	{
+	public void draw(Graphics g)
+	{
 		g.setColor(Color.red);
-//		this.drawFull(g);
-		g.drawImage(image,this.x,this.y,null);
+		
+		//AppleRect.drawFull(g);   Shows hitbox
+		
+		g.drawImage(image,this.x,this.y,40,40,null);
 	}
+	
+	
 	
 }
