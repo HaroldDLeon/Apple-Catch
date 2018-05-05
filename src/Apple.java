@@ -3,7 +3,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Random;
-import java.awt.Image;
 
 
 public class Apple {
@@ -73,6 +72,7 @@ public class Apple {
 			this.points =40;
 			
 			image=Toolkit.getDefaultToolkit().getImage(Apple);
+			
 			
 			//setsprite for normal apple
 		}
