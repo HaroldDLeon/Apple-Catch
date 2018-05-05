@@ -1,26 +1,16 @@
 import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.Image;
 
-import javafx.scene.paint.Color;
-
-public class Basket
-{
-	Rect BasketRect = new Rect(200,600,60,20);
+public class Basket extends Rect {
 	
-	Basket()
-	{
-		
+	Image basket_img = Toolkit.getDefaultToolkit().getImage("../assets/basket.png");
+	
+	public Basket(int x, int y) {
+		super(x,y,60,20);
 	}
 	
-	
-	public void draw(Graphics g)
-	{
-		g.setColor(java.awt.Color.yellow);
-		BasketRect.drawFull(g);
+	public void draw(Graphics g) {
+		g.drawImage(basket_img, this.x, this.y, null);
 	}
-	
-	public void moveBy(int move)
-	{
-		this.BasketRect.x+=move;
-	}
-	
 }
