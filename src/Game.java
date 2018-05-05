@@ -1,6 +1,7 @@
 import java.applet.Applet;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -11,6 +12,8 @@ import javafx.scene.paint.Color;
 
 public class Game extends Applet implements KeyListener, Runnable, MouseListener, MouseMotionListener
 {
+	final int game_width = 800;
+	final int game_height = 1000; 
 	
 	Image	off_screen;
 	Graphics off_g;	  
@@ -19,32 +22,34 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	int AppleTimer = 0;
 	
-	//Speed multiplyer for the basket
+	//Speed multiplier for the basket
 	int speed =1;
 	
-	//Booleans controling Basket direction
+	//Booleans controlling Basket direction
 	boolean lePressed = false;
 	boolean riPressed = false;
 	
 	int score;
 
-	Basket Basket = new Basket();
+	Basket Basket = new Basket(game_width/2, (int)(0.85*game_height));
 	
 	Rect Tree = new Rect(20,20,500,200);
-	
+
 	Apple[] Apple = new Apple[50];
 	
 	int ArrayIndex=0;
 	
 	int AppleSlowTimer =0;
 	
+	Image tree = Toolkit.getDefaultToolkit().getImage("../assets/Appletree.png");
+	
 	
 	public void init() 
 	{
 		//Initializing threads and removing flicker, not much reason to touch anything here
 				
-		off_screen = createImage(1000,700);
-		off_g	   = off_screen.getGraphics();
+		this.off_screen = createImage(game_width,game_height);
+		this.off_g	   = off_screen.getGraphics();
 		
 		this.requestFocus();
 		this.addKeyListener(this);
@@ -97,8 +102,8 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 			}*/
 			for(int i =0; i<50; i++)
 			{
-				System.out.println(" "+i);
-				if(	Apple[i].AppleRect.isColiding(Basket.BasketRect))
+//				System.out.println(" "+i);
+				if(	Apple[i].AppleRect.isColiding(Basket))
 				{
 					Apple[i].AppleRect.moveBy(-10000, -1000);
 					
@@ -120,20 +125,20 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 			}
 			
 			//Controls Basket Speed
-			if(lePressed) Basket.moveBy(-3*speed);
-			if(riPressed) Basket.moveBy(3*speed); 
+			if(lePressed) Basket.moveBy(-3*speed, 0);
+			if(riPressed) Basket.moveBy(3*speed, 0); 
 			
 			
-			//Left Side Basket Boundry
-			if(Basket.BasketRect.x <20)
+			//Left Side Basket Boundary
+			if(Basket.x <20)
 			{
-				Basket.BasketRect.x = 20;
+				Basket.x = 20;
 			}
 			
-			//Right side Basket Boundry
-			if(Basket.BasketRect.x >480)
+			//Right side Basket Boundary
+			if(Basket.x >480)
 			{
-				Basket.BasketRect.x = 480;
+				Basket.x = 480;
 			}
 			
 			repaint();
@@ -150,22 +155,20 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	public void update(Graphics g)
 	{
-		off_g.clearRect(0, 0, 1000, 1000);
-		
+		off_g.clearRect(0, 0, game_width, game_height);
 		paint(off_g);
-		
 		g.drawImage(off_screen,0,0,null);
 	}
 	
 	public void paint(Graphics g)
 	{
-		this.setSize(600, 800);
+		this.setSize(game_width, game_height);
 		
 		//Draws Score (in top left corner currently
 		g.drawString(score + " ", 10, 10);
 		
-		Basket.draw(g);
 		
+		g.drawImage(tree, 0,0, null);
 	
 		Tree.drawFull(g);
 		
@@ -173,6 +176,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		{
 			Apple[i].draw(g);
 		}
+		Basket.draw(g);
 	
 	}
 
@@ -182,49 +186,33 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	}
 
 	
-	public void mouseDragged(MouseEvent e) {
-		
-		
+	public void mouseDragged(MouseEvent e) {	
 	}
 
 	
-	public void mouseMoved(MouseEvent e) {
-		
-		
+	public void mouseMoved(MouseEvent e) {		
 	}
 
-	
 	public void mouseClicked(MouseEvent e) {
-		
-		
 	}
 
-	
 	public void mouseEntered(MouseEvent e) {
-		
-		
 	}
 
-	
 	public void mouseExited(MouseEvent e) {
-		
-		
 	}
 
-	
 	public void mousePressed(MouseEvent e) {
-		
-		
+		int mx = e.getX();
+		int my = e.getY();
+	
+//		System.out.println("mx: " + Integer.toString(mx) +" my: " + Integer.toString(my));
+//		System.out.println(0.9*game_height);
+	}
+	
+	public void mouseReleased(MouseEvent e) {	
 	}
 
-	
-	public void mouseReleased(MouseEvent e) {
-		
-		
-	}
-
-
-	
 	public void keyPressed(KeyEvent e) 
 	{
 		int code = e.getKeyCode();
@@ -234,7 +222,6 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		if (code == e.VK_D)		riPressed = true;
 		
 	}
-
 	
 	public void keyReleased(KeyEvent e) 
 	{
@@ -246,12 +233,9 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		
 	}
 
-	
 	public void keyTyped(KeyEvent e) {
-		
-		
+				
 	}
-	
-	
+		
 	
 }
