@@ -34,15 +34,17 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	Apple[] Apple = new Apple[50];
 	Basket Basket = new Basket(game_width/2, (int)(0.85*game_height));
+	BGM game_sound = new BGM("../assets/game_over");
 	
-	Rect tree_rect = new Rect(20,20,500,200);
-	Rect StartButton = new Rect(100,100,300,100);
-	Rect MainButton = new Rect(50,650,50,30);
-	Rect EndButton = new Rect(500,650,50,30);
+	Rect tree_rect 		= new Rect(20,20,500,200);
+	Rect StartButton 	= new Rect(110,350,350,75);
+	Rect MainButton 	= new Rect(50,650,50,30);
+	Rect EndButton 		= new Rect(500,650,50,30);
 	
-	Image tree = Toolkit.getDefaultToolkit().getImage("../assets/Appletree.png");
+	Image tree 		= Toolkit.getDefaultToolkit().getImage("../assets/Appletree.png");
 	Image score_img = Toolkit.getDefaultToolkit().getImage("../assets/score.png");
-	Image title = Toolkit.getDefaultToolkit().getImage("../assets/Title.png");
+	Image title 	= Toolkit.getDefaultToolkit().getImage("../assets/apple_catch.png");
+	Image game_over = Toolkit.getDefaultToolkit().getImage("../assets/game_over.gif");
 
 	public void init()	{
 		
@@ -64,6 +66,10 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	}
 		
 	public void run() {
+		if (GameState == 2){
+			game_sound.Play();	
+		}
+//		game_sound.Play();
 		while(true)		{
 			if(GameState>0){
 				if(AppleTimer<80){
@@ -138,11 +144,14 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	public void paint(Graphics g)	{
 		this.setSize(game_width, game_height);
-		g.setFont(new Font("Roboto", Font.PLAIN, 36));		
+		g.setFont(new Font("Roboto Light", Font.PLAIN, 36));		
 		g.drawImage(tree, 0,0, null);
 		
 		if(GameState == 0){
-			StartButton.drawFull(g);
+//			StartButton.draw(g);
+			String welcome = "Press here to start!";
+			g.drawImage(title, 40, 30, null);
+			g.drawString(welcome, StartButton.x+25, StartButton.y+40);
 		}
 		else if(GameState==1){
 			g.drawImage(tree, 0,0, null);
@@ -153,14 +162,13 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		}
 		else if(GameState == 2){
 			g.setColor(java.awt.Color.black);
+			g.drawImage(game_over, 0, 0, null);
 			g.drawString("Game Over! Your score was: " + score, 10, 10);
+			g.drawImage(score_img, 0,  0,  null);
 		}
-		
-		MainButton.drawFull(g);
-		MainButton.draw(g);
 		String score_str = Integer.toString(score);
-		g.drawImage(score_img, 0,  0,  null);
 		g.drawString(score_str + " ", 110 , 40);
+		MainButton.draw(g);
 	}	
 
 	public void SpawnApples(int Index)	{
@@ -186,7 +194,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		
 		int mx = e.getX();
 		int my = e.getY();
-		
+//		System.out.println("mx: " + Integer.toString(mx) +" my: " + Integer.toString(my));
 		if(GameState==0){
 			if(StartButton.inRect(mx, my)){
 				GameState = 1;
