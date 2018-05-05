@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Random;
 
 public class Game extends Applet implements KeyListener, Runnable, MouseListener, MouseMotionListener
 {
@@ -35,6 +36,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	Apple[] Apple = new Apple[50];
 	Basket Basket = new Basket(game_width/2, (int)(0.85*game_height));
 	BGM game_sound = new BGM("../assets/game_over");
+	Image apple = Toolkit.getDefaultToolkit().createImage("../assets/red_apple.png");
 	
 	Rect tree_rect 		= new Rect(20,20,500,200);
 	Rect StartButton 	= new Rect(110,350,350,75);
@@ -143,24 +145,29 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	}
 	
 	public void paint(Graphics g)	{
+
+
 		this.setSize(game_width, game_height);
 		g.setFont(new Font("Roboto Light", Font.PLAIN, 36));		
 		g.drawImage(tree, 0,0, null);
 		
 		if(GameState == 0){
 //			StartButton.draw(g);
+			DrawApplesOnTree(g);
 			String welcome = "Press here to start!";
 			g.drawImage(title, 40, 30, null);
 			g.drawString(welcome, StartButton.x+25, StartButton.y+40);
 		}
 		else if(GameState==1){
 			g.drawImage(tree, 0,0, null);
+			DrawApplesOnTree(g);
 			for(int i = 0; i < 50; i++){
 				Apple[i].draw(g);
 			}
 			Basket.draw(g);
 		}
 		else if(GameState == 2){
+			DrawApplesOnTree(g);
 			g.setColor(java.awt.Color.black);
 			g.drawImage(game_over, 0, 0, null);
 			g.drawString("Game Over! Your score was: " + score, 10, 10);
@@ -169,10 +176,23 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		String score_str = Integer.toString(score);
 		g.drawString(score_str + " ", 110 , 40);
 		MainButton.draw(g);
+				
 	}	
 
 	public void SpawnApples(int Index)	{
 		Apple[Index] = new Apple(Index);
+	}
+	
+	public void DrawApplesOnTree(Graphics g) {
+		g.drawImage(apple,70,100,40,40,this);
+		g.drawImage(apple,180,70,40,40,this);
+		g.drawImage(apple,300,190,40,40,this);
+		g.drawImage(apple,200,150,40,40,this);
+		g.drawImage(apple,400,120,40,40,this);
+		g.drawImage(apple,100,220,40,40,this);
+		g.drawImage(apple,300,80,40,40,this);
+		g.drawImage(apple,470,200,40,40,this);
+		g.drawImage(apple,425,50,40,40,this);
 	}
 	
 	public void mouseDragged(MouseEvent e) {
@@ -182,6 +202,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	}
 
 	public void mouseClicked(MouseEvent e) {
+	
 	}
 	
 	public void mouseEntered(MouseEvent e) {	
