@@ -41,6 +41,8 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	Rect EndButton = new Rect(500,650,50,30);
 	
 	Image tree = Toolkit.getDefaultToolkit().getImage("../assets/Appletree.png");
+	Image score_img = Toolkit.getDefaultToolkit().getImage("../assets/score.png");
+	Image title = Toolkit.getDefaultToolkit().getImage("../assets/Title.png");
 
 	public void init()	{
 		
@@ -136,7 +138,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	public void paint(Graphics g)	{
 		this.setSize(game_width, game_height);
-		g.setFont(new Font("Roboto", Font.PLAIN, 12));		
+		g.setFont(new Font("Roboto", Font.PLAIN, 36));		
 		g.drawImage(tree, 0,0, null);
 		
 		if(GameState == 0){
@@ -151,13 +153,14 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		}
 		else if(GameState == 2){
 			g.setColor(java.awt.Color.black);
-			g.drawString("Game Over! Your score was: " + score, 100, 350);
+			g.drawString("Game Over! Your score was: " + score, 10, 10);
 		}
 		
 		MainButton.drawFull(g);
 		MainButton.draw(g);
 		String score_str = Integer.toString(score);
-		g.drawString(score_str + " ", 120, 120);
+		g.drawImage(score_img, 0,  0,  null);
+		g.drawString(score_str + " ", 110 , 40);
 	}	
 
 	public void SpawnApples(int Index)	{
