@@ -470,6 +470,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		if(HomeButton.inRect(mx, my))	{
 			GameState = 0;
 			score = 0;
+			this.resetApples();
 		}
 		if(EndButton.inRect(mx, my)){
 			GameState = 6;
