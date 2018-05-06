@@ -9,6 +9,40 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+
+*********************
+ 	TO-DO LIST
+ 	
+-	- **DONE** LOOP BACKGROUND MUSIC
+-	== Uploaded temp potential background music
+-	== Used small sound class from stackoverflow user - Sound.java class
+-	
+ 	- FIX BUCKET SIDES COLLISION WITH APPLES
+ 	-- Sides of bucket should collide with apples
+ 	
+@@ -34,13 +30,22 @@
+ 	
+ 	- PUSH TO START DISPLAY
+ 	-- Make it button? Need some design ideas here.
++	-- Make it just say "START" ?
+ 	
+ 	////////////////////
+ 	 
+ 	BUGS
+ 	
+-	- SOME RED APPLES DECREASE POINTS / ARE ROTTEN 
++	-	
++	
++	///////////////////
++	
++	EXTRA FEATURES
++	
++	- SOUND EFFECTS FOR CATCHING APPLES
++	-- Different sounds for different apples - good sound and bad sound
+ 	
++		
+ 	*/
+
 public class Game extends Applet implements KeyListener, Runnable, MouseListener, MouseMotionListener
 {
 	final int game_width = 563;
