@@ -94,7 +94,7 @@ public class Apple extends Rect {
 		
 		//AppleRect.drawFull(g);   Shows hitbox
 		
-		g.drawImage(image,this.x,this.y,40,40,null);
+		g.drawImage(image,this.x,this.y,40,45,null);
 	}
 	
 	

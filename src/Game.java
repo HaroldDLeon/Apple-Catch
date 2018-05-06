@@ -99,8 +99,13 @@ final int game_width = 563;
 	int fastApplesSpeed = 4;
 	int slowApplesSpeed = 2;
 	
-	Image apple1 = Toolkit.getDefaultToolkit().createImage("../assets/red_apple.png");
-
+	// Apple Images
+	Image redApple = Toolkit.getDefaultToolkit().createImage("../assets/red_apple.png");
+	Image greenApple = Toolkit.getDefaultToolkit().createImage("../assets/green_apple.png");
+	Image goldApple = Toolkit.getDefaultToolkit().createImage("../assets/gold_apple.png");
+	Image rottenApple = Toolkit.getDefaultToolkit().createImage("../assets/rotten_apple.png");
+	
+	// Keys
 	boolean lePressed = false;
 	boolean riPressed = false;
 	boolean spaceBarPressed = false;
@@ -109,7 +114,6 @@ final int game_width = 563;
 	
 	Apple[] Apple = new Apple[50];
 	Basket Basket = new Basket(game_width/2, (int)(0.85*game_height));
-	//BGM game_sound = new BGM("../assets/game_over");
 	
 	Rect tree_rect 		= new Rect(20,20,500,200);
 	Rect PlayButton 	= new Rect(110,350,350,75);
@@ -120,8 +124,8 @@ final int game_width = 563;
 	Rect Game3Button	= new Rect(410,0,100,75);
 	
 	// Audio
-	BGM gameOverSound 		= new BGM("../assets/game_over");
-	BGM background_music	= new BGM("../assets/background_music");
+	// BGM gameOverSound 		= new BGM("../assets/game_over");
+	// BGM background_music	= new BGM("../assets/background_music");
 	Sound gameOver 			= new Sound("../assets/game_over.wav");
 	Sound backgroundMusic 	= new Sound("../assets/background_music.wav");
 	Sound coinSound	        = new Sound("../assets/coin.wav");
@@ -154,20 +158,15 @@ final int game_width = 563;
 	}
 		
 	public void run() {
-		//background_music.Play();
+
 		backgroundMusic.loop();
-		
-		if (GameState == 6)
-		{
-			//game_sound.Play();	
-		}
-//		game_sound.Play();
+
 		while(true)	
 		{
 			//System.out.println(""+GameState);
 			if(GameState == 2) 
 			{	
-				// TEMP MEASURE TO GET MORE APPLES TO FALL
+				// TEMP MEASURE TO GET MORE APPLES TO FALL AT SAME TIME
 				// TEST
 				if(AppleTimer<80)
 				{
@@ -278,8 +277,6 @@ final int game_width = 563;
 			
 			if(GameState == 3) 
 			{	
-				
-				
 				if(AppleTimer<80)
 				{
 					AppleTimer++;
@@ -433,6 +430,7 @@ final int game_width = 563;
 		this.setSize(game_width, game_height);
 		g.setFont(new Font("Roboto Light", Font.PLAIN, 36));		
 		g.drawImage(tree, 0,0,game_width,game_height, null);
+		drawApplesOnTree(g);
 		
 		if(GameState == 0)
 		{
@@ -497,7 +495,6 @@ final int game_width = 563;
 		String score_str = Integer.toString(score);
 		g.drawString(score_str + " ", 110 , 40);
 		}
-		
 		
 		HomeButton.drawFull(g);
 		
@@ -575,19 +572,20 @@ final int game_width = 563;
 		}
 	}
 
-	public void DrawApplesOnTree(Graphics g) {
-		g.drawImage(apple1,70,100,40,40,this);
-		g.drawImage(apple1,180,70,40,40,this);
-		g.drawImage(apple1,300,190,40,40,this);
-		g.drawImage(apple1,200,150,40,40,this);
-		g.drawImage(apple1,400,120,40,40,this);
-		g.drawImage(apple1,100,220,40,40,this);
-		g.drawImage(apple1,300,80,40,40,this);
-		g.drawImage(apple1,470,200,40,40,this);
-		g.drawImage(apple1,425,50,40,40,this);
+	public void drawApplesOnTree(Graphics g) {
+		int appleWidth = 40;
+		int appleHeight = 45;
+		
+		g.drawImage(greenApple,70,100,appleWidth,appleHeight,this);
+		g.drawImage(redApple,180,70,appleWidth,appleHeight,this);
+		g.drawImage(greenApple,300,190,appleWidth,appleHeight,this);
+		g.drawImage(redApple,200,150,appleWidth,appleHeight,this);
+		g.drawImage(greenApple,400,120,appleWidth,appleHeight,this);
+		g.drawImage(redApple,100,220,appleWidth,appleHeight,this);
+		g.drawImage(goldApple,300,80,appleWidth,appleHeight,this);
+		g.drawImage(redApple,470,200,appleWidth,appleHeight,this);
+		g.drawImage(redApple,425,50,appleWidth,appleHeight,this);
 	}
-	
-	
 	
 	public void mouseReleased(MouseEvent e) {		
 	}
