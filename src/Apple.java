@@ -3,7 +3,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Random;
-import java.awt.Image;
 
 
 public class Apple extends Rect {
@@ -94,7 +93,7 @@ public class Apple extends Rect {
 		
 		//AppleRect.drawFull(g);   Shows hitbox
 		
-		g.drawImage(image,this.x,this.y,40,45,null);
+		g.drawImage(image,(int) this.x, (int) this.y,40,45,null);
 	}
 	
 	

@@ -1,6 +1,6 @@
 import java.awt.Graphics;
-import java.awt.Toolkit;
 import java.awt.Image;
+import java.awt.Toolkit;
 
 public class Basket extends Rect {
 	
@@ -11,6 +11,6 @@ public class Basket extends Rect {
 	}
 	
 	public void draw(Graphics g) {
-		g.drawImage(basket_img, this.x, this.y, null);
+		g.drawImage(basket_img, (int)this.x, (int) this.y, null);
 	}
 }

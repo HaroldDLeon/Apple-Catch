@@ -1,4 +1,4 @@
-import java.awt.*;
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class Sprite extends Rect
@@ -73,7 +73,7 @@ public class Sprite extends Rect
         /// moving = false;
 
       g.setColor(Color.red);
-      if (selected) g.drawLine((int)x+8, (int)y+h, (int)x+w-5, (int)y+h);
+      if (selected) g.drawLine((int)x+8, (int)(y+h), (int)(x+w-5), (int)(y+h));
       g.setColor(Color.black);
 
    }

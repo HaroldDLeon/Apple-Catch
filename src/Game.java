@@ -166,7 +166,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	}
 
 	public void run() {
-//		backgroundMusic.loop();
+		backgroundMusic.loop();
 		while(true)	{
 			System.out.println(""+GameState);
 			if(GameState == infinite_mode) 	{
@@ -382,7 +382,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 			//			StartButton.draw(g);
 			String welcome = "Press here to start!";
 			g.drawImage(title, 40, 30, null);
-			g.drawString(welcome, PlayButton.x+25, PlayButton.y+40);
+			g.drawString(welcome, (int) PlayButton.x+25, (int)PlayButton.y+40);
 		}
 		else if(GameState == mode_selection)	{
 			g.drawImage(instruct, 0, 0, game_width, game_height,this);
