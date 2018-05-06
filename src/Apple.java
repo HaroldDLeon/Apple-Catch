@@ -50,23 +50,23 @@ public class Apple extends Rect {
 	{
 		super(-100,-100,40,40);
 		
-		if(SuperRandom > 89)
+		if(SuperRandom > 95)
 		{
 			this.isGolden=true;
 			this.points = 100;
 			
 			image=Toolkit.getDefaultToolkit().getImage(GoldApple);
 		}
-		else if(SuperRandom> 79 && SuperRandom<90)
+		else if(SuperRandom> 20 && SuperRandom<95)
 		{
 			this.isRotten = true;
 			this.points = -100;
 			
 			image=Toolkit.getDefaultToolkit().getImage(RottenApple);
 		}
-		else if(SuperRandom>49 && SuperRandom<80 )
+		else if(SuperRandom>10 && SuperRandom<20 )
 		{
-			this.points = -100;
+			this.points = +100;
 			
 			image=Toolkit.getDefaultToolkit().getImage(Apple);
 		}

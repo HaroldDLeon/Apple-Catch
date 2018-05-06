@@ -19,10 +19,6 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	*********************
 	TO-DO LIST
 	
-	- **DONE** LOOP BACKGROUND MUSIC
-	== Uploaded temp potential background music
-	== Used small sound class from stackoverflow user - Sound.java class
-	
 	- FIX BUCKET SIDES COLLISION WITH APPLES
 	-- Sides of bucket should collide with apples
 	
@@ -34,13 +30,22 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	- PUSH TO START DISPLAY
 	-- Make it button? Need some design ideas here.
+	-- Make it just say "START" ?
 	
 	////////////////////
 	 
 	BUGS
 	
-	- SOME RED APPLES DECREASE POINTS / ARE ROTTEN 
+	-	
 	
+	///////////////////
+	
+	EXTRA FEATURES
+	
+	- SOUND EFFECTS FOR CATCHING APPLES
+	-- Different sounds for different apples - good sound and bad sound
+	
+		
 	*/
 	
 	final int game_width = 563;
@@ -51,20 +56,23 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	Thread t;
 	
-	int AppleTimer 	= 30;
+	int AppleTimer 	= 100;
 	int GameState 	= 0;
 	int ArrayIndex 	= 0;
 	int AppleSlowTimer = 0;
 	
 	int lives;
 	int time;
-	int speed = 1;
+	int basketSpeed = 4;
+	int applesSpeed = 3;
 	int score;
 	
 	boolean lePressed = false;
 	boolean riPressed = false;
 	
-	Apple[] apples = new Apple[50];
+	int numOfApples = 50;
+	
+	Apple[] apples = new Apple[numOfApples];
 	Basket Basket = new Basket(game_width/2, (int)(0.85*game_height));
 	Image apple1 = Toolkit.getDefaultToolkit().createImage("../assets/red_apple.png");
 
@@ -75,7 +83,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	Sound backgroundMusic 	= new Sound("../assets/background_music.wav");
 	
 	Rect tree_rect 		= new Rect(20,20,500,200);
-	Rect StartButton 	= new Rect(110,330,350,75);
+	Rect StartButton 	= new Rect(110,350,350,75);
 	Rect MainButton 	= new Rect(50,650,50,30);
 	Rect EndButton 		= new Rect(500,650,50,30);
 	
@@ -100,7 +108,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		t = new Thread(this);
 		t.start();
 		
-		for(int i =0; i<50; i++){
+		for(int i =0; i<numOfApples; i++){
 			apples[i] = new Apple();
 		}
 	}
@@ -115,11 +123,34 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		}
 
 		while(true)		{
-			if(GameState>0){
+			
+			if(GameState==1){
 				if(AppleTimer<80){
 					AppleTimer++;
 				}
-				if(AppleTimer == 80)	{
+				if(AppleTimer >= 80)	{
+					AppleTimer = 0;
+					SpawnApples(ArrayIndex);
+					ArrayIndex = ArrayIndex+1;
+					if(ArrayIndex > 49){
+						ArrayIndex = 0;
+					}
+				}
+				if(AppleTimer<80){
+					AppleTimer++;
+				}
+				if(AppleTimer >= 80)	{
+					AppleTimer = 0;
+					SpawnApples(ArrayIndex);
+					ArrayIndex = ArrayIndex+1;
+					if(ArrayIndex > 49){
+						ArrayIndex = 0;
+					}
+				}
+				if(AppleTimer<80){
+					AppleTimer++;
+				}
+				if(AppleTimer >= 80)	{
 					AppleTimer = 0;
 					SpawnApples(ArrayIndex);
 					ArrayIndex = ArrayIndex+1;
@@ -135,7 +166,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 				{
 					AppleSlowTimer= 0;
 				}*/
-				for(int i = 0; i < 50; i++)
+				for(int i = 0; i < numOfApples; i++)
 				{
 					//System.out.println(" "+i);
 					if(	apples[i].isColiding(Basket)){
@@ -148,7 +179,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 					
 					/*if(AppleSlowTimer == 3)
 					{*/
-						apples[i].moveBy(0, 1);
+						apples[i].moveBy(0, applesSpeed);
 					/*}
 					
 					if(AppleSlowTimer ==4)
@@ -158,9 +189,8 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 				}
 				
 				//Controls Basket Speed
-				if(lePressed) Basket.moveBy(-3*speed,0);
-				if(riPressed) Basket.moveBy(3*speed,0); 
-				
+				if(lePressed) Basket.moveBy(-3*basketSpeed,0);
+				if(riPressed) Basket.moveBy(3*basketSpeed,0); 
 				
 				//Left Side Basket Boundary
 				if(Basket.x <20){
@@ -208,7 +238,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		else if(GameState==1){
 			g.drawImage(tree, 0,0, null);
 			DrawApplesOnTree(g);
-			for(int i = 0; i < 50; i++){
+			for(int i = 0; i < numOfApples; i++){
 				apples[i].draw(g);
 			}
 			Basket.draw(g);
@@ -220,8 +250,10 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		else if(GameState == 2){
 			DrawApplesOnTree(g);
 			g.setColor(java.awt.Color.black);
-			g.drawImage(game_over, 0, 0, null);
-			g.drawString("Game Over! Your score was: " + score, 10, 10);
+			g.drawImage(game_over, 30, 0, null);
+
+			g.drawString("Your score was: ", 150, 400);
+			g.drawString("" + score, 250, 450);
 			g.drawImage(score_img, 0,  0,  null);
 		}
 		MainButton.draw(g);
@@ -264,7 +296,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		
 		int mx = e.getX();
 		int my = e.getY();
-		//System.out.println("mx: " + Integer.toString(mx) +" my: " + Integer.toString(my));
+		System.out.println("mx: " + Integer.toString(mx) +" my: " + Integer.toString(my));
 		if(GameState==0){
 			if(StartButton.inRect(mx, my)){
 				GameState = 1;
