@@ -83,7 +83,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	final int sky_shooter		= 5;
 	final int end_screen 		= 6;
 	
-
+	
 	Image	off_screen;
 	Graphics off_g;
 
@@ -120,17 +120,21 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	boolean spaceBarPressed = false;
 	boolean downPressed = false;
 	boolean upPressed = false;
-
+	
+	// Balls
+	Ball[] tennis = new Ball[10];
+	
 	Apple[] Apple = new Apple[50];
 	Basket Basket = new Basket(game_width/2, (int)(0.85*game_height));
 
-	Rect tree_rect 		= new Rect(20,20,500,200);
-	Rect PlayButton 	= new Rect(110,350,350,75);
-	Rect HomeButton 	= new Rect(50,650,50,30);
-	Rect EndButton 		= new Rect(500,650,50,30);
-	Rect Game1Button	= new Rect(110,0,100,75);
-	Rect Game2Button	= new Rect(250,0,100,75);
-	Rect Game3Button	= new Rect(410,0,100,75);
+	Rect tree_rect 		= new Rect(20,   20,  500, 200);
+	Rect PlayButton 	= new Rect(110, 350,  350,  75);
+	Rect HomeButton 	= new Rect(50,  650,   50,  30);
+	Rect EndButton 		= new Rect(500, 650,   50,  30);
+	Rect Game1Button	= new Rect(110,   0,  100,  75);
+	Rect Game2Button	= new Rect(250,   0,  100,  75);
+	Rect Game3Button	= new Rect(410,   0,  100,  75);
+	Rect GameSkyButton 	= new Rect(260,	120,  100,  75);
 
 	// Audio
 	// BGM gameOverSound 		= new BGM("../assets/game_over");
@@ -166,52 +170,15 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	}
 
 	public void run() {
-		backgroundMusic.loop();
+//		backgroundMusic.loop();
 		while(true)	{
-			System.out.println(""+GameState);
+//			System.out.println(""+GameState);
 			if(GameState == infinite_mode) 	{
-				// TEMP MEASURE TO GET MORE APPLES TO FALL AT SAME TIME
-				// TEST
-				if(AppleTimer<80)	{
-					AppleTimer++;
-				}
-				if(AppleTimer == 80) {
-					AppleTimer = 0;
-					SpawnApples(ArrayIndex);
-					ArrayIndex = ArrayIndex+1;
-					if(ArrayIndex > 49)
-					{
-						ArrayIndex = 0;
-					}
-				}
-				if(AppleTimer<80){
-					AppleTimer++;
-				}
-				if(AppleTimer == 80) {
-					AppleTimer = 0;
-					SpawnApples(ArrayIndex);
-					ArrayIndex = ArrayIndex+1;
-					if(ArrayIndex > 49)	{
-						ArrayIndex = 0;
-					}
-				}
-				if(AppleTimer<80) {
-					AppleTimer++;
-				}
-				if(AppleTimer == 80) {
-					AppleTimer = 0;
-					SpawnApples(ArrayIndex);
-					ArrayIndex = ArrayIndex+1;
-					if(ArrayIndex > 49)	{
-						ArrayIndex = 0;
-					}
-				}
-
+				this.pushApples(3);
 				//Checks for collision with baskets each frame, and increases your score by the value of the apple
 
 				/*AppleSlowTimer++;
-				if(AppleSlowTimer ==3)
-				{
+				if(AppleSlowTimer ==3)	{
 					AppleSlowTimer= 0;
 				}*/
 				for(int i = 0; i < 50; i++)	{
@@ -229,57 +196,19 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 						AppleSlowTimer= 0;
 					}*/
 				}
+				
+				// User can slow down speed by holding down space bar
+				if(spaceBarPressed) applesSpeed = slowApplesSpeed; 
+				else 				applesSpeed = fastApplesSpeed;
 
-				//Controls Basket Speed
-				if(lePressed) {
-					Basket.moveBy(-1*basketSpeed,0);
-				}
-				if(riPressed) {
-					Basket.moveBy(1*basketSpeed,0);
-				}
+				if(downPressed) 	basketSpeed -= 1;
+				if(upPressed) 		basketSpeed += 1;
+				if(basketSpeed<1) 	basketSpeed = 1;
+				if(basketSpeed>15) 	basketSpeed = 15;
 
-				// User can slow down speed by holding down spacebar
-				if(spaceBarPressed) {
-					applesSpeed = slowApplesSpeed;
-				} else {
-					applesSpeed = fastApplesSpeed;
-				}
-				if(downPressed) {
-					basketSpeed -= 1;
-				}
-				if(upPressed) {
-					basketSpeed += 1;
-				}
-				if(basketSpeed<1) {
-					basketSpeed = 1;
-				}
-
-				if(basketSpeed>15) {
-					basketSpeed = 15;
-				}
-
-				//Left Side Basket Boundary
-				if(Basket.x <20){
-					Basket.x = 20;
-				}
-				//Right side Basket Boundary
-				if(Basket.x >480){
-					Basket.x = 480;
-				}
 			}
-			if(GameState == timed_mode) 	{
-				if(AppleTimer<80) {
-					AppleTimer++;
-				}
-				if(AppleTimer == 80) {
-					time--;
-					AppleTimer = 0;
-					SpawnApples(ArrayIndex);
-					ArrayIndex = ArrayIndex+1;
-					if(ArrayIndex > 49)	{
-						ArrayIndex = 0;
-					}
-				}
+			if(GameState == timed_mode) {
+				this.pushApples(1);
 				if(time == 0){
 					GameState = end_screen;
 				}
@@ -290,38 +219,11 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 					}
 					Apple[i].moveBy(0, 1*applesSpeed);
 				}
-
-				//Controls Basket BasketSpeed
-				if(lePressed) {
-					Basket.moveBy(-1*basketSpeed,0);
-				}
-				if(riPressed) {
-					Basket.moveBy(1*basketSpeed,0);
-				}
-				//Left Side Basket Boundary
-				if(Basket.x <20){
-					Basket.x = 20;
-				}
-				//Right side Basket Boundary
-				if(Basket.x >480){
-					Basket.x = 480;
-				}
 			}
 			if(GameState == rotten_fest) {
-				if(AppleTimer<80) {
-					AppleTimer++;
-				}
-				if(AppleTimer == 80) {
-					AppleTimer = 0;
-					SpawnApples(ArrayIndex);
-					ArrayIndex = ArrayIndex+1;
-					if(ArrayIndex > 49)	{
-						ArrayIndex = 0;
-					}
-				}
-				if(lives == 0)	{
-					GameState = end_screen;
-				}
+				this.pushApples(1);
+				if(lives == 0)	GameState = end_screen;
+				
 				for(int i = 0; i < 50; i++)	{
 					if(	Apple[i].isColiding(Basket)) {
 						Apple[i].moveBy(-10000, -1000);
@@ -339,26 +241,18 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 						Apple[i].y = -100000;
 					}
 				}
-
-				//Controls Basket BasketSpeed
-				if(lePressed) {
-					Basket.moveBy(-1*basketSpeed,0);
-				}
-				if(riPressed) {
-					Basket.moveBy(1*basketSpeed,0);
-				}
-
-				//Left Side Basket Boundary
-				if(Basket.x <20){
-					Basket.x = 20;
-				}
-				//Right side Basket Boundary
-				if(Basket.x >480){
-					Basket.x = 480;
-				}
 			}
+			if(GameState == sky_shooter) {	
+				this.pushApples(10);
+			}
+			//Basket speed
+			if(lePressed) Basket.moveBy(-1*basketSpeed,0);
+			if(riPressed) Basket.moveBy(1*basketSpeed,0);
+			// Basket limiter.
+			if(Basket.x <20) 	Basket.x = 20;
+			if(Basket.x >480)	Basket.x = 480;
+		
 			repaint();
-
 			try {
 				t.sleep(15);
 			}
@@ -376,30 +270,35 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		this.setSize(game_width, game_height);
 		g.setFont(new Font("Roboto Light", Font.PLAIN, 36));
 		g.drawImage(tree, 0,0,game_width,game_height, null);
-		drawApplesOnTree(g);
-
+		
 		if(GameState == start_screen)	{
 			//			StartButton.draw(g);
+			drawApplesOnTree(g);
 			String welcome = "Press here to start!";
 			g.drawImage(title, 40, 30, null);
 			g.drawString(welcome, (int) PlayButton.x+25, (int)PlayButton.y+40);
 		}
 		else if(GameState == mode_selection)	{
+			drawApplesOnTree(g);
 			g.drawImage(instruct, 0, 0, game_width, game_height,this);
 			Game1Button.drawFull(g);
 			Game2Button.drawFull(g);
 			Game3Button.drawFull(g);
+			GameSkyButton.drawFull(g);
 		}
 		else if(GameState == timed_mode)	{
 			String time_str = Integer.toString(time);
 			g.drawString(time_str + " ", 450 , 40);
 		}
 		else if(GameState == rotten_fest)	{
-			System.out.println(lives+"");
+//			System.out.println(lives+"");
 			for(int i = lives; i > 0; i--)	{
 				g.drawImage(heart_apple, 560-(40*i), 20,this);
 			}
 		}
+		else if(GameState == sky_shooter) {
+			
+		} 
 		else if(GameState == end_screen)	{
 			this.resetApples();
 			g.setColor(java.awt.Color.black);
@@ -431,6 +330,22 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 
 	public void SpawnApples(int Index)	{
 		Apple[Index] = new Apple(Index);
+	}
+	
+	public void pushApples(int number_of_apples) {
+		for(int i = 0; i < number_of_apples; i++) {
+			if(AppleTimer < 80){
+				AppleTimer++;
+			}
+			if(AppleTimer == 80) {
+				AppleTimer = 0;	
+				SpawnApples(ArrayIndex);
+				ArrayIndex = ArrayIndex+1;
+				if(ArrayIndex > 49)	{
+					ArrayIndex = 0;
+				}
+			}
+		}
 	}
 	public void resetApples() {
 		for(int i = 0; i < Apple.length; i++){
@@ -477,6 +392,9 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 			if(Game3Button.inRect(mx, my))	{
 				GameState = rotten_fest;
 				lives = 4;
+			}
+			if(GameSkyButton.inRect(mx, my)) {
+				GameState = sky_shooter;
 			}
 		}
 		if(HomeButton.inRect(mx, my))	{
