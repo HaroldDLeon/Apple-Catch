@@ -10,21 +10,24 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Random;
 
+import javafx.scene.layout.Background;
+
 public class Game extends Applet implements KeyListener, Runnable, MouseListener, MouseMotionListener
 {
 	/*
 	*********************
 	TO-DO LIST
 	
-	- LOOP BACKGROUND MUSIC
+	- **DONE** LOOP BACKGROUND MUSIC
 	== Uploaded temp potential background music
+	== Used small sound class from stackoverflow user - Sound.java class
 	
 	- FIX BUCKET SIDES COLLISION WITH APPLES
 	-- Sides of bucket should collide with apples
 	
 	- RESET GAME AFTER GAME OVER
 	-- When you go back to the game after game over,
-	-- apples continue falling from last location
+	-- apples continue falling from last locations
 	
 	- MENU BUTTON DISPLAY
 	-- Remove from main game state '0'
@@ -35,6 +38,12 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	- PUSH TO START DISPLAY
 	-- Make it button?
+	
+	////////////////////
+	 
+	BUGS
+	
+	- SOME RED APPLES DECREASE POINTS / ARE ROTTEN 
 	
 	*/
 	
@@ -61,9 +70,13 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	Apple[] Apple = new Apple[50];
 	Basket Basket = new Basket(game_width/2, (int)(0.85*game_height));
+	Image apple = Toolkit.getDefaultToolkit().createImage("../assets/red_apple.png");
+
+	// Audio
 	BGM gameOverSound = new BGM("../assets/game_over");
 	BGM background_music = new BGM("../assets/background_music");
-	Image apple = Toolkit.getDefaultToolkit().createImage("../assets/red_apple.png");
+	Sound gameOver = new Sound("../assets/game_over.wav");
+	Sound backgroundMusic = new Sound("../assets/background_music.wav");
 	
 	Rect tree_rect 		= new Rect(20,20,500,200);
 	Rect StartButton 	= new Rect(110,350,350,75);
@@ -96,13 +109,9 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		
 	public void run() {
 		
-		if (GameState != 2) {
-			background_music.Play();
-		}
+		//background_music.Play();
+		backgroundMusic.loop();
 		
-		if (GameState == 2){
-			gameOverSound.Play();	
-		}
 //		game_sound.Play();
 		while(true)		{
 			if(GameState>0){
@@ -162,6 +171,11 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 				}
 			}
 			repaint();
+
+			if (GameState == 2){
+				backgroundMusic.stop();
+				gameOver.loop();
+			}
 		
 			try {
 				t.sleep(15);	
@@ -247,16 +261,19 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		
 		int mx = e.getX();
 		int my = e.getY();
-//		System.out.println("mx: " + Integer.toString(mx) +" my: " + Integer.toString(my));
+		//System.out.println("mx: " + Integer.toString(mx) +" my: " + Integer.toString(my));
 		if(GameState==0){
 			if(StartButton.inRect(mx, my)){
 				GameState = 1;
 			}
 		}
 		
-		if(MainButton.inRect(mx, my))	{
+		if(MainButton.inRect(mx, my))	{			
 			GameState = 0;
 			score = 0;
+			gameOver.stop();
+			backgroundMusic.play();
+
 		}
 		if(EndButton.inRect(mx, my)){
 			GameState = 2;
