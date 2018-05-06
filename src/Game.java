@@ -21,6 +21,8 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	- FIX BUCKET SIDES COLLISION WITH APPLES
 	-- Sides of bucket should collide with apples
+	-- Alternatively consider leaving it and change basket to a critter?
+	--- Like a squirrel or something?
 	
 	- MENU BUTTON DISPLAY
 	-- Make it button?
@@ -40,11 +42,34 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	///////////////////
 	
-	EXTRA FEATURES
+	EXTRA (POTENTIAL) FEATURES
 	
 	- SOUND EFFECTS FOR CATCHING APPLES
 	-- Different sounds for different apples - good sound and bad sound
+	== Set something very basic up for all apples just to test it
+	=== Little buggy/delayed
 	
+	- BUCKET STARTS "FILLING UP" AFTER CERTAIN SCORE
+	
+	- LET PLAYER PICK 'CHARACTER'
+	-- Think it would be fairly simple
+	
+	- ADD LIVES?
+	
+	///////////////////
+	 
+	NOTES
+
+	- PLAYER CAN CONTROL SPEED OF BASKET WITH 'UP' AND 'DOWN' ARROW KEYS
+	== 'UP' to increase by 1, 'DOWN' to increase
+	
+	- PLAYER CAN SLOW DOWN APPLES WITH SPACEBAR
+	== Just messing with mechanics, we can choose to keep it or not
+	
+	- MOVED SCORE TO BOTTOM RIGHT
+	== Looks a little better? We can keep messing with it
+		
+	(DELETE THIS NOTE LATER)	
 		
 	*/
 	
@@ -63,12 +88,24 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	int lives;
 	int time;
-	int basketSpeed = 4;
-	int applesSpeed = 3;
 	int score;
 	
+	// Basket Options
+	int basketSpeed = 5;
+	int slowBasketSpeed = 1;
+	int fastBasketSpeed = 10;
+	
+	// Apples Options
+	int applesSpeed = 4;
+	int fastApplesSpeed = 4;
+	int slowApplesSpeed = 2;
+	
+	// Keys
 	boolean lePressed = false;
 	boolean riPressed = false;
+	boolean spaceBarPressed = false;
+	boolean downPressed = false;
+	boolean upPressed = false;
 	
 	int numOfApples = 50;
 	
@@ -81,6 +118,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	BGM background_music	= new BGM("../assets/background_music");
 	Sound gameOver 			= new Sound("../assets/game_over.wav");
 	Sound backgroundMusic 	= new Sound("../assets/background_music.wav");
+	Sound coinSound	        = new Sound("../assets/coin.wav");
 	
 	Rect tree_rect 		= new Rect(20,20,500,200);
 	Rect StartButton 	= new Rect(110,350,350,75);
@@ -171,7 +209,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 					//System.out.println(" "+i);
 					if(	apples[i].isColiding(Basket)){
 						apples[i].moveBy(-10000, -1000);
-						
+						coinSound.play(); 
 						score += apples[i].points;
 					}
 					
@@ -189,9 +227,21 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 				}
 				
 				//Controls Basket Speed
-				if(lePressed) Basket.moveBy(-3*basketSpeed,0);
-				if(riPressed) Basket.moveBy(3*basketSpeed,0); 
+				if(lePressed) Basket.moveBy(-1*basketSpeed,0);
+				if(riPressed) Basket.moveBy(1*basketSpeed,0); 
+				// User can slow down speed by holding down spacebar
+				if(spaceBarPressed) applesSpeed = slowApplesSpeed;
+				else applesSpeed = fastApplesSpeed;
 				
+				if(downPressed) basketSpeed -= 1;
+				if(upPressed) basketSpeed += 1;
+				if(basketSpeed<1) {
+					basketSpeed = 1;
+				}
+				if(basketSpeed>15) {
+					basketSpeed = 15;
+				}
+
 				//Left Side Basket Boundary
 				if(Basket.x <20){
 					Basket.x = 20;
@@ -244,8 +294,11 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 			Basket.draw(g);
 			g.setColor(Color.BLACK);
 			String score_str = Integer.toString(score);
-			g.drawString(score_str + " ", 110 , 40);
-			g.drawImage(score_img, 0,  0,  null);
+			g.drawString(score_str + " ", 430 , 630);
+			g.drawImage(score_img, 430,  630,  null);
+			
+			g.drawString("" + basketSpeed, 270 , 530);
+
 		}
 		else if(GameState == 2){
 			DrawApplesOnTree(g);
@@ -332,6 +385,12 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		
 		if (code == e.VK_LEFT)		lePressed = true;
 		if (code == e.VK_RIGHT)		riPressed = true;
+		
+		if (code == e.VK_SPACE)		spaceBarPressed = true;
+		
+		if (code == e.VK_DOWN)			downPressed = true;
+		if (code == e.VK_UP)			upPressed = true;
+
 	}
 
 	public void keyReleased(KeyEvent e)	{
@@ -343,6 +402,12 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 
 		if (code == e.VK_LEFT)		lePressed = false;
 		if (code == e.VK_RIGHT)		riPressed = false;
+		
+		if (code == e.VK_SPACE)		spaceBarPressed = false;
+		
+		if (code == e.VK_DOWN)			downPressed = false;
+		if (code == e.VK_UP)			upPressed = false;
+
 	}
 
 	public void keyTyped(KeyEvent e) {
