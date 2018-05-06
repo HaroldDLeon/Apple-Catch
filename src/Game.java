@@ -32,9 +32,6 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	-- Make it button? Need some design ideas here.
 	-- Make it just say "START" ?
 
-	- NEED TO RESET GAME AFTER RESTARTING
-	-- Think Luke accidentally took out previous fix
-
 	////////////////////
 
 	BUGS
