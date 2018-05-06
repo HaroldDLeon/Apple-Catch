@@ -12,6 +12,32 @@ import java.util.Random;
 
 public class Game extends Applet implements KeyListener, Runnable, MouseListener, MouseMotionListener
 {
+	/*
+	*********************
+	TO-DO LIST
+	
+	- LOOP BACKGROUND MUSIC
+	== Uploaded temp potential background music
+	
+	- FIX BUCKET SIDES COLLISION WITH APPLES
+	-- Sides of bucket should collide with apples
+	
+	- RESET GAME AFTER GAME OVER
+	-- When you go back to the game after game over,
+	-- apples continue falling from last location
+	
+	- MENU BUTTON DISPLAY
+	-- Remove from main game state '0'
+	-- Make it button?
+	
+	- SCORE DISPLAY
+	-- Add graphic to left of it? Red apple?
+	
+	- PUSH TO START DISPLAY
+	-- Make it button?
+	
+	*/
+	
 	final int game_width = 563;
 	final int game_height = 700; 
 	
@@ -35,7 +61,8 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 	Apple[] Apple = new Apple[50];
 	Basket Basket = new Basket(game_width/2, (int)(0.85*game_height));
-	BGM game_sound = new BGM("../assets/game_over");
+	BGM gameOverSound = new BGM("../assets/game_over");
+	BGM background_music = new BGM("../assets/background_music");
 	Image apple = Toolkit.getDefaultToolkit().createImage("../assets/red_apple.png");
 	
 	Rect tree_rect 		= new Rect(20,20,500,200);
@@ -68,8 +95,13 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	}
 		
 	public void run() {
+		
+		if (GameState != 2) {
+			background_music.Play();
+		}
+		
 		if (GameState == 2){
-			game_sound.Play();	
+			gameOverSound.Play();	
 		}
 //		game_sound.Play();
 		while(true)		{
@@ -239,6 +271,9 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	
 		if (code == e.VK_A)		lePressed = true;
 		if (code == e.VK_D)		riPressed = true;
+		
+		if (code == e.VK_LEFT)		lePressed = true;
+		if (code == e.VK_RIGHT)		riPressed = true;
 	}
 
 	public void keyReleased(KeyEvent e)	{
@@ -246,6 +281,10 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		
 		if (code == e.VK_A)		lePressed = false;
 		if (code == e.VK_D)		riPressed = false;
+		
+
+		if (code == e.VK_LEFT)		lePressed = false;
+		if (code == e.VK_RIGHT)		riPressed = false;
 	}
 
 	public void keyTyped(KeyEvent e) {
