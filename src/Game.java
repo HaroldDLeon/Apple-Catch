@@ -1,6 +1,7 @@
 import java.applet.Applet;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -25,19 +26,14 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	- FIX BUCKET SIDES COLLISION WITH APPLES
 	-- Sides of bucket should collide with apples
 	
-	- RESET GAME AFTER GAME OVER
-	-- When you go back to the game after game over,
-	-- apples continue falling from last locations
-	
 	- MENU BUTTON DISPLAY
-	-- Remove from main game state '0'
 	-- Make it button?
 	
 	- SCORE DISPLAY
 	-- Add graphic to left of it? Red apple?
 	
 	- PUSH TO START DISPLAY
-	-- Make it button?
+	-- Make it button? Need some design ideas here.
 	
 	////////////////////
 	 
@@ -68,18 +64,18 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	boolean lePressed = false;
 	boolean riPressed = false;
 	
-	Apple[] Apple = new Apple[50];
+	Apple[] apples = new Apple[50];
 	Basket Basket = new Basket(game_width/2, (int)(0.85*game_height));
-	Image apple = Toolkit.getDefaultToolkit().createImage("../assets/red_apple.png");
+	Image apple1 = Toolkit.getDefaultToolkit().createImage("../assets/red_apple.png");
 
 	// Audio
-	BGM gameOverSound = new BGM("../assets/game_over");
-	BGM background_music = new BGM("../assets/background_music");
-	Sound gameOver = new Sound("../assets/game_over.wav");
-	Sound backgroundMusic = new Sound("../assets/background_music.wav");
+	BGM gameOverSound 		= new BGM("../assets/game_over");
+	BGM background_music	= new BGM("../assets/background_music");
+	Sound gameOver 			= new Sound("../assets/game_over.wav");
+	Sound backgroundMusic 	= new Sound("../assets/background_music.wav");
 	
 	Rect tree_rect 		= new Rect(20,20,500,200);
-	Rect StartButton 	= new Rect(110,350,350,75);
+	Rect StartButton 	= new Rect(110,330,350,75);
 	Rect MainButton 	= new Rect(50,650,50,30);
 	Rect EndButton 		= new Rect(500,650,50,30);
 	
@@ -87,7 +83,9 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	Image score_img = Toolkit.getDefaultToolkit().getImage("../assets/score.png");
 	Image title 	= Toolkit.getDefaultToolkit().getImage("../assets/apple_catch.png");
 	Image game_over = Toolkit.getDefaultToolkit().getImage("../assets/game_over.gif");
-
+	Image apple 	= Toolkit.getDefaultToolkit().createImage("../assets/red_apple.png");
+	Image start_img = Toolkit.getDefaultToolkit().createImage("../assets/start_button.png");
+	
 	public void init()	{
 		
 		//Initializing threads and removing flicker, not much reason to touch anything here		
@@ -103,7 +101,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		t.start();
 		
 		for(int i =0; i<50; i++){
-			Apple[i] = new Apple();
+			apples[i] = new Apple();
 		}
 	}
 		
@@ -112,7 +110,10 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		//background_music.Play();
 		backgroundMusic.loop();
 		
-//		game_sound.Play();
+		if (GameState == 2) {
+			gameOverSound.Play();	
+		}
+
 		while(true)		{
 			if(GameState>0){
 				if(AppleTimer<80){
@@ -137,17 +138,17 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 				for(int i = 0; i < 50; i++)
 				{
 					//System.out.println(" "+i);
-					if(	Apple[i].isColiding(Basket)){
-						Apple[i].moveBy(-10000, -1000);
+					if(	apples[i].isColiding(Basket)){
+						apples[i].moveBy(-10000, -1000);
 						
-						score += Apple[i].points;
+						score += apples[i].points;
 					}
 					
 					//Moves all apples down by 1
 					
 					/*if(AppleSlowTimer == 3)
 					{*/
-						Apple[i].moveBy(0, 1);
+						apples[i].moveBy(0, 1);
 					/*}
 					
 					if(AppleSlowTimer ==4)
@@ -194,7 +195,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 
 
 		this.setSize(game_width, game_height);
-		g.setFont(new Font("Roboto Light", Font.PLAIN, 36));		
+		g.setFont(new Font("Roboto Light", Font.TRUETYPE_FONT, 34));		
 		g.drawImage(tree, 0,0, null);
 		
 		if(GameState == 0){
@@ -202,15 +203,19 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 			DrawApplesOnTree(g);
 			String welcome = "Press here to start!";
 			g.drawImage(title, 40, 30, null);
-			g.drawString(welcome, StartButton.x+25, StartButton.y+40);
+			g.drawImage(start_img, StartButton.x, StartButton.y, null);
 		}
 		else if(GameState==1){
 			g.drawImage(tree, 0,0, null);
 			DrawApplesOnTree(g);
 			for(int i = 0; i < 50; i++){
-				Apple[i].draw(g);
+				apples[i].draw(g);
 			}
 			Basket.draw(g);
+			g.setColor(Color.BLACK);
+			String score_str = Integer.toString(score);
+			g.drawString(score_str + " ", 110 , 40);
+			g.drawImage(score_img, 0,  0,  null);
 		}
 		else if(GameState == 2){
 			DrawApplesOnTree(g);
@@ -219,26 +224,24 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 			g.drawString("Game Over! Your score was: " + score, 10, 10);
 			g.drawImage(score_img, 0,  0,  null);
 		}
-		String score_str = Integer.toString(score);
-		g.drawString(score_str + " ", 110 , 40);
 		MainButton.draw(g);
 				
 	}	
 
 	public void SpawnApples(int Index)	{
-		Apple[Index] = new Apple(Index);
+		apples[Index] = new Apple(Index);
 	}
 	
 	public void DrawApplesOnTree(Graphics g) {
-		g.drawImage(apple,70,100,40,40,this);
-		g.drawImage(apple,180,70,40,40,this);
-		g.drawImage(apple,300,190,40,40,this);
-		g.drawImage(apple,200,150,40,40,this);
-		g.drawImage(apple,400,120,40,40,this);
-		g.drawImage(apple,100,220,40,40,this);
-		g.drawImage(apple,300,80,40,40,this);
-		g.drawImage(apple,470,200,40,40,this);
-		g.drawImage(apple,425,50,40,40,this);
+		g.drawImage(apple1,70,100,40,40,this);
+		g.drawImage(apple1,180,70,40,40,this);
+		g.drawImage(apple1,300,190,40,40,this);
+		g.drawImage(apple1,200,150,40,40,this);
+		g.drawImage(apple1,400,120,40,40,this);
+		g.drawImage(apple1,100,220,40,40,this);
+		g.drawImage(apple1,300,80,40,40,this);
+		g.drawImage(apple1,470,200,40,40,this);
+		g.drawImage(apple1,425,50,40,40,this);
 	}
 	
 	public void mouseDragged(MouseEvent e) {
@@ -271,12 +274,18 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		if(MainButton.inRect(mx, my))	{			
 			GameState = 0;
 			score = 0;
+
 			gameOver.stop();
 			backgroundMusic.play();
-
+			for (int i = 0; i < apples.length; i++) {
+				apples[i].x = -100;
+				apples[i].y = 0;
+			}
 		}
 		if(EndButton.inRect(mx, my)){
 			GameState = 2;
+
+			 
 		}
 	}
 
