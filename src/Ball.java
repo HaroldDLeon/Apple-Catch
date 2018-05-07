@@ -7,8 +7,8 @@ public class Ball extends Rect {
 	String location = "../assets/tennis_ball.png";
 	Image image;
 	
-	public Ball(double x, double y, double width, double height) {
-		super(x, y, width, height);
+	public Ball(double x, double y) {
+		super(x, y, 40, 45);
 		image =Toolkit.getDefaultToolkit().getImage(location);
 	}
 	public void draw(Graphics g){
