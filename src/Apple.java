@@ -34,10 +34,10 @@ public class Apple extends Rect {
 	
 	boolean isRotten 	= false;	
 	boolean isGolden 	= false;
-	boolean isLife 		= false;
+	boolean isBonus		= false;
 	
 	public Apple()	{
-		super(-100,0,0,0);
+		super(-100,-10000,0,0);
 	}
 	
 	public Apple(String type) {
@@ -79,12 +79,13 @@ public class Apple extends Rect {
 			this.points = rotten_points;
 			image=Toolkit.getDefaultToolkit().getImage(RottenApple);
 		}
-		else if(SuperRandom>10 && SuperRandom<20 )	{
+		else if(SuperRandom>5 && SuperRandom<20 )	{
 			this.points = red_points;
 			image=Toolkit.getDefaultToolkit().getImage(Apple);
 		}
 		else{
 			this.points = green_points;
+			this.isBonus = true;
 			image=Toolkit.getDefaultToolkit().getImage(GreenApple);
 		}
 		
