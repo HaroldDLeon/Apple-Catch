@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.concurrent.TimeUnit;
 
 public class Game extends Applet implements KeyListener, Runnable, MouseListener, MouseMotionListener {
 	/*
@@ -114,10 +115,10 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	Rect PlayButton 	= new Rect(110, 430,  353,  110);
 	Rect HomeButton 	= new Rect(0,  	620,  134, 	105);
 	Rect EndButton 		= new Rect(450, 620,  137,  113);
-	Rect InfiniteButton	= new Rect(115, 0,  300,  94);
-	Rect TimerButton	= new Rect(115, 100,  300,  94);
-	Rect RottenButton	= new Rect(115, 200,  300,  94);
-	Rect SkyButton 		= new Rect(80,	300,  300,  94);
+	Rect InfiniteButton	= new Rect(115, 140,  300,  94);
+	Rect TimerButton	= new Rect(115, 240,  300,  94);
+	Rect RottenButton	= new Rect(115, 340,  300,  94);
+	Rect SkyButton 		= new Rect(80,	440,  300,  94);
 
 	//Button images:
 	Image PlayImage 	= Toolkit.getDefaultToolkit().getImage("../assets/start_game.png");
@@ -141,6 +142,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	Image GameOver 		= Toolkit.getDefaultToolkit().getImage("../assets/game_over.gif");
 	Image HeartApple 	=Toolkit.getDefaultToolkit().getImage("../assets/heart_apple.png");
 	Image Scope			= Toolkit.getDefaultToolkit().getImage("../assets/Scope.png");
+	Image displayBar =  Toolkit.getDefaultToolkit().createImage("../assets/displaybar.png");
 	
 	public void init()	{
 
@@ -250,6 +252,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 					}
 				}
 			}
+			
 			if(GameState == sky_shooter) 
 			{		
 				timeTimer++;
@@ -293,6 +296,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	public void paint(Graphics g){
 		this.setSize(game_width, game_height);
 		g.setFont(new Font("Roboto Light", Font.PLAIN, 36));
+		
 		if(mode_selection < GameState && GameState < end_screen) {
 			g.drawImage(TreeBG, 0,0,game_width,game_height, null);
 		}
@@ -312,15 +316,24 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 			g.drawImage(RottenImage, 	(int)RottenButton.x, 	(int) RottenButton.y, 	null);
 			g.drawImage(SkyImage, 	    (int)SkyButton.x,     	(int) SkyButton.y, 	null);
 		}
+		
+		else if(GameState == infinite_mode)	{
+			g.drawImage(displayBar, 0, 0, null);
+		}
+		
 		else if(GameState == timed_mode)	{
+			g.drawImage(displayBar, 0, 0, null);
 			String time_str = Integer.toString(time);
-			g.drawString(time_str + " ", 450 , 40);
+			g.drawString(time_str + " ", 450 , 35);
+			g.setColor(java.awt.Color.white);
 		}
 		else if(GameState == rotten_fest)	{
 //			//System.out.println(lives+"");
+			g.drawImage(displayBar, 0, 0, null);
 			for(int i = lives; i > 0; i--)	{
-				g.drawImage(HeartApple , 560-(40*i), 20,this);
+				g.drawImage(HeartApple , 560-(40*i),  0, 40, 40, this);
 			}
+			//g.setColor(java.awt.Color.white);
 		}
 		/*else if(GameState == sky_shooter) {
 			for (int i = 0; i < red_apples.length; i++) {
@@ -329,37 +342,40 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 			ball1.draw(g);
 		} */
 		else if(GameState == sky_shooter) {
+			g.drawImage(displayBar, 0, 0, null);
 			String time_str = Integer.toString(time);
-			g.drawString(time_str + " ", 450 , 40);
+			g.drawString(time_str + " ", 450 , 35);
+			//g.setColor(java.awt.Color.white);
 			//g.drawImage(Scope,mouseX-50,mouseY-50,100,100,this);
-			//System.out.println("x: "+ mouseX +"Y: "+mouseY );
 			
 		}
 		
 		else if(GameState == end_screen)	{
 			this.resetApples();
-			g.setColor(java.awt.Color.black);
+			g.setColor(java.awt.Color.yellow);
 			g.drawImage(GameOver, 30, 0, null);
-			g.drawString("Game Over! Your score was: " + score, 0, 400);
-			g.drawImage(ScoreImage, 0,  0,  null);
+			g.drawString("Game Over! Your score was: " + score, 25, 400);
+			g.drawImage(ScoreImage, 0,  0, 80, 40,  null);
 		}
 		if((GameState > mode_selection) && (GameState < end_screen))	{
-			g.drawImage(ScoreImage,0,0,null);
+			
+			g.drawImage(ScoreImage,0,0, 80, 40, null);
 			drawApplesOnTree(g);
 			for(int i = 0; i < 50; i++){
 				Apple[i].draw(g);
 			}
 			if(GameState != 5)Basket.draw(g);
 			else g.drawImage(Scope,mouseX-50,mouseY-50,100,100,this);
-			g.setColor(Color.BLACK);
+			g.setColor(java.awt.Color.white);
 			String score_str = Integer.toString(score);
 			
 			
 			//g.drawString("" + basketSpeed, 270 , 530);
 		}
 		if(GameState > mode_selection){
+			
 			String score_str = Integer.toString(score);
-			g.drawString(score_str + " ", 110 , 40);
+			g.drawString(score_str + " ", 90 , 35);
 		}
 		if(GameState >1 && GameState<6)
 		{
