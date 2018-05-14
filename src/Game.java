@@ -109,9 +109,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	boolean downPressed = false;
 	boolean upPressed = false;
 	
-	// Balls
-	Ball[] tennis = new Ball[10];
-	Ball ball1 = new Ball(325, 600);
+	
 	
 	Apple[] Apple = new Apple[50];
 	Apple[] red_apples = new Apple[15];
