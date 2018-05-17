@@ -1,5 +1,4 @@
 import java.applet.Applet;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -9,7 +8,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.concurrent.TimeUnit;
 
 public class Game extends Applet implements KeyListener, Runnable, MouseListener, MouseMotionListener {
 	/*
@@ -68,10 +66,9 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	int mouseX;
 	int mouseY;
 
-	
 	int timeTimer = 0;
 	int endTimer = 0;
-	int musicTestTimer=0;
+	int musicTestTimer = 0;
 	int AppleTimer 	= 30;
 	int AppleSlowTimer = 0;	
 	boolean GameOverChecker =false;
@@ -95,9 +92,9 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	int slowApplesSpeed = 2;
 
 	// Apple Images
-	Image redApple = Toolkit.getDefaultToolkit().createImage("../assets/red_apple.png");
-	Image greenApple = Toolkit.getDefaultToolkit().createImage("../assets/green_apple.png");
-	Image goldApple = Toolkit.getDefaultToolkit().createImage("../assets/gold_apple.png");
+	Image redApple 	= Toolkit.getDefaultToolkit().createImage("../assets/red_apple.png");
+	Image greenApple= Toolkit.getDefaultToolkit().createImage("../assets/green_apple.png");
+	Image goldApple	= Toolkit.getDefaultToolkit().createImage("../assets/gold_apple.png");
 	Image rottenApple = Toolkit.getDefaultToolkit().createImage("../assets/rotten_apple.png");
 	Image lifeApple =  Toolkit.getDefaultToolkit().createImage("../assets/rotten_apple.png");
 	Image timeApple =  Toolkit.getDefaultToolkit().createImage("../assets/rotten_apple.png");
@@ -108,8 +105,6 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	boolean spaceBarPressed = false;
 	boolean downPressed = false;
 	boolean upPressed = false;
-	
-	
 	
 	Apple[] Apple = new Apple[50];
 	Apple[] red_apples = new Apple[15];
@@ -147,7 +142,7 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	Image GameOver 		= Toolkit.getDefaultToolkit().getImage("../assets/game_over.gif");
 	Image HeartApple 	=Toolkit.getDefaultToolkit().getImage("../assets/heart_apple.png");
 	Image Scope			= Toolkit.getDefaultToolkit().getImage("../assets/Scope.png");
-	Image displayBar =  Toolkit.getDefaultToolkit().createImage("../assets/displaybar.png");
+	Image displayBar 	=  Toolkit.getDefaultToolkit().createImage("../assets/displaybar.png");
 	
 	public void init()	{
 
@@ -171,27 +166,26 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 		}
 	}
 
-	public void run() {
-//		
+	public void run() {	
 		while(true)	{
-			if(musicTestTimer == 0)
-			{
+			if(musicTestTimer == 0)	{
 				backgroundMusic.play();
 			}
 			
-//			//System.out.println(""+GameState);
+			System.out.println("Gamestate: "+GameState);
 			musicTestTimer++;
-			if(musicTestTimer == 4000)
-			{
+			if(musicTestTimer == 4000){
 				
 				musicTestTimer = 0;
 			}
 			
-			if(GameState==6 && GameOverChecker == false) 
-				{
-					gameOver.play();
-					GameOverChecker = true;
-				}
+//			if(GameState == end_screen && GameOverChecker == false){
+			if(GameState == 6){
+				System.out.println("Entered statement");
+				backgroundMusic.stop();	
+				gameOver.play();
+				GameOverChecker = true;
+			}
 			
 			if(GameState == infinite_mode) 	{
 				this.pushApples(3);
@@ -232,16 +226,11 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 
 			}
 			
-			
-			
 			if(GameState == timed_mode) {
-				
 				timeTimer++;
-				if(timeTimer == 66)
-				{
+				if(timeTimer == 66)	{
 					time--;
 					timeTimer=0;
-					
 				}
 				this.pushApples(2);
 				if(time == 0){
@@ -249,64 +238,45 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 				}
 				for(int i = 0; i < 50; i++)	{
 					if(	Apple[i].isColiding(Basket)){
-						if(Apple[i].isRotten==false)
-							{
+						if(Apple[i].isRotten==false){
 								coinSound.stop();
 								coinSound.play();
-							}
+						}
 						Apple[i].moveBy(-10000, -1000);
 						score += Apple[i].points;
 					}
 					Apple[i].moveBy(0, 1*applesSpeed);
 				}
 			}
-			
-			
-			
-			
-			
 			if(GameState == rotten_fest) {
 				this.pushApples(3);
 				if(lives == 0)	GameState = end_screen;
 				
 				for(int i = 0; i < 50; i++)	{
 					if(	Apple[i].isColiding(Basket)) {
-						if(Apple[i].isRotten==false)
-							{	
+						if(Apple[i].isRotten==false){	
 								coinSound.stop();
 								coinSound.play();
-							}
+						}
 						Apple[i].moveBy(-10000, -100000);
 						score += Apple[i].points;
 						if (Apple[i].isRotten)lives--;
-						
 					}
 					Apple[i].moveBy(0, 1*applesSpeed);
 					if((Apple[i].y>700) && (Apple[i].isRotten == false)){
 						lives -= 1;
-						
-						
 						//System.out.println("lost life:drop" + i +" x: "+ Apple[i].x);
 						Apple[i].y = -100000;
 					}
 				}
 			}
-			
-			
-			
-			
-			
-			if(GameState == sky_shooter) 
-			{		
+			if(GameState == sky_shooter){		
 				timeTimer++;
-				if(timeTimer == 66)
-				{
+				if(timeTimer == 66)	{
 					time--;
 					timeTimer=0;
-					
 				}
-				if(time==0)
-				{
+				if(time==0)	{
 					GameState=6;
 				}
 				
@@ -316,16 +286,14 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 				}
 			}
 			
-			
-			
-			
 			//Basket speed
 			if(lePressed) Basket.moveBy(-1*basketSpeed,0);
 			if(riPressed) Basket.moveBy(1*basketSpeed,0);
+			
 			// Basket limiter.
 			if(Basket.x <20) 	Basket.x = 20;
 			if(Basket.x >480)	Basket.x = 480;
-		
+
 			repaint();
 			try {
 				t.sleep(15);
@@ -404,40 +372,29 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 			g.drawString("Game Over! Your score was: " + score, 5, 400);
 			g.drawImage(ScoreImage, 0,  0, 80, 40,  this);
 			
-			
 			int locationX = 0;
 			int locationY = 0;
 			
 			int tempscore = score;
 			
-			
-			while(scorechecker<tempscore )
-			{
+			while(scorechecker<tempscore )	{
 				scorechecker=2;
-				if(tempscore>200)
-				{
+				if(tempscore>200){
 					g.drawImage(goldApple,5+locationX,450+locationY,this);
 					tempscore= tempscore-100;
 					locationX+=40;
 				}
-				if(tempscore<=200)
-				{
+				if(tempscore<=200)	{
 					g.drawImage(redApple,5+locationX,450+locationY,this);
 					tempscore = tempscore-25;
 					locationX+=40;
 				}
 				if(tempscore<50)gameOver.play();
-				
-				
-				if(locationX > 520)
-				{
+				if(locationX > 520)	{
 					locationX = 0;
 					locationY = locationY+40;
 				}
-			}
-			
-			
-			
+			}	
 		}
 		if((GameState > mode_selection) && (GameState < end_screen))	{
 			
@@ -450,25 +407,18 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 			else g.drawImage(Scope,mouseX-50,mouseY-50,100,100,this);
 			g.setColor(java.awt.Color.white);
 			String score_str = Integer.toString(score);
-			
-			
 			//g.drawString("" + basketSpeed, 270 , 530);
 		}
 		if(GameState > mode_selection){
-			
 			String score_str = Integer.toString(score);
 			g.drawString(score_str + " ", 90 , 35);
 		}
-		if(GameState >1 && GameState<6)
-		{
+		if(GameState >1 && GameState<6)	{
 			g.drawImage(EndImage, 	(int)EndButton.x,  (int) EndButton.y, null);
 		}
-		if(GameState>1)
-		{
+		if(GameState>1)	{
 			g.drawImage(MenuImage, 	(int)HomeButton.x, (int) HomeButton.y, null);
 		}
-		
-
 	}
 
 	public void SpawnApples(int Index)	{
@@ -560,27 +510,19 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 			GameState = end_screen;
 		}
 		
-		if(GameState == 5)
-		{
+		if(GameState == 5)	{
 			ShootingSound.stop();
 			ShootingSound.play(); 
 			
-			for(int i = 0; i < 50; i++)	
-			{
-				if(Apple[i].inRect(mx, my))
-				{
+			for(int i = 0; i < 50; i++)	{
+				if(Apple[i].inRect(mx, my))	{
 					Apple[i].y = -10000;
 					score+=Apple[i].points;
 					time+=2;
 				}
-			}
-			
-		}
-		
+			}	
+		}		
 	}
-
-	
-	
 	
 	public void drawApplesOnTree(Graphics g) {
 		int appleWidth = 40;
@@ -624,8 +566,5 @@ public class Game extends Applet implements KeyListener, Runnable, MouseListener
 	}
 
 	public void keyTyped(KeyEvent e) {
-
 	}
-
-
 }
